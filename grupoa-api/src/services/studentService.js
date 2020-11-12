@@ -27,3 +27,27 @@ export async function createStudentService(body) {
         throw new ErrorResponse(err.message, 500);
     }
 }
+
+export async function updatetudentService(id, body) {
+    try {
+        if (!validateEmail(body.email)) {
+            throw new ErrorResponse(MESSAGES.INVALID_EMAIL, 502);
+        }
+
+        const student = await Student.findOne({ where: { id } });
+
+        if (!student) {
+            throw new ErrorResponse(MESSAGES.STUDENT_NOT_FOUND, 404);
+        }
+
+        await Student.update({ name: body.name, email: body.email }, { where: { id } });
+
+        return new SuccessResponse({ data: MESSAGES.UPDATED }, 200);
+    } catch (err) {
+        if (err.hasOwnProperty('hasError')) {
+            throw new ErrorResponse(err.message, err.status);
+        }
+
+        throw new ErrorResponse(err.message, 500);
+    }
+}
