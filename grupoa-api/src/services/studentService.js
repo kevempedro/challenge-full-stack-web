@@ -28,7 +28,7 @@ export async function createStudentService(body) {
     }
 }
 
-export async function updatetudentService(id, body) {
+export async function updateStudentService(id, body) {
     try {
         if (!validateEmail(body.email)) {
             throw new ErrorResponse(MESSAGES.INVALID_EMAIL, 502);
@@ -43,6 +43,26 @@ export async function updatetudentService(id, body) {
         await Student.update({ name: body.name, email: body.email }, { where: { id } });
 
         return new SuccessResponse({ data: MESSAGES.UPDATED }, 200);
+    } catch (err) {
+        if (err.hasOwnProperty('hasError')) {
+            throw new ErrorResponse(err.message, err.status);
+        }
+
+        throw new ErrorResponse(err.message, 500);
+    }
+}
+
+export async function deleteStudentService(id) {
+    try {
+        const student = await Student.findOne({ where: { id } });
+
+        if (!student) {
+            throw new ErrorResponse(MESSAGES.STUDENT_NOT_FOUND, 404);
+        }
+
+        await Student.destroy({ where: { id } });
+
+        return new SuccessResponse({ data: MESSAGES.DELETED }, 200);
     } catch (err) {
         if (err.hasOwnProperty('hasError')) {
             throw new ErrorResponse(err.message, err.status);
