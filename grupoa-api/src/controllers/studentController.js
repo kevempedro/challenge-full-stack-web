@@ -1,8 +1,25 @@
 import {
+    findAllStudentService,
     createStudentService,
     updateStudentService,
     deleteStudentService,
 } from '../services/studentService';
+
+export async function findAllStudentController(request, response) {
+    try {
+        const { search, orderBy, direction, limit, offset } = request.query;
+
+        const result = await findAllStudentService({ search, orderBy, direction, limit, offset });
+
+        return response.status(result.status).json(result.data);
+    } catch (err) {
+        if (err.hasOwnProperty('hasError')) {
+            return response.status(err.status).json({ message: err.message });
+        }
+
+        return response.status(500).json({ message: err.message });
+    }
+}
 
 export async function createStudentController(request, response) {
     try {
