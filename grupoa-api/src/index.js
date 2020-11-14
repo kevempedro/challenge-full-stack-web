@@ -1,8 +1,8 @@
 import express from 'express';
 import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
-
 import 'dotenv/config';
+
 import './database';
 import routes from './routes';
 
