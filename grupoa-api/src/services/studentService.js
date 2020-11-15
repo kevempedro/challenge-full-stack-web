@@ -17,6 +17,13 @@ export async function findAllStudentService() {
     }
 }
 
+/*
+    Eu fiz essa função recebendo como parâmetro a query, só para deixar de exemplo um findAll com paginação,
+    ordernação e busca. Não consegui implementar no front para passar esses parâmetros para o backend, pois
+    não tenho tanta experiência com Vue.js e o tenho que tinha para fazer o teste durante minha semana não foi muito,
+    mas mesmo assim preferi deixar essa função de exemplo e fazer outro findall para poder usar no front.
+*/
+
 // export async function findAllStudentService(query) {
 //     try {
 //         const students = await Student.findAll({
