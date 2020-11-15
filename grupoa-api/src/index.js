@@ -1,6 +1,7 @@
 import express from 'express';
 import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
+import cors from 'cors';
 import 'dotenv/config';
 
 import './database';
@@ -12,6 +13,8 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 
 app.use(helmet());
+
+app.use(cors());
 
 app.use(routes);
 
