@@ -1,5 +1,8 @@
-import http from '../config/http'
+import http from '../config/http';
 
 export const studentApi = {
-  findAll: () => http.get('/student'),
-}
+  findAllStudents: () => http.get('/student'),
+  createStudent: (data) => http.post('/student', data),
+  updateStudent: (idStudent, data) => http.put(`/student/${idStudent}`, data),
+  deleteStudent: (idStudent) => http.delete(`/student/${idStudent}`),
+};

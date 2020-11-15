@@ -4,7 +4,7 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app>
       <v-list dense nav>
-        <v-list-item>
+        <v-list-item @click="">
           <v-list-item-icon>
             <v-icon>mdi-view-dashboard</v-icon>
           </v-list-item-icon>
@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import DataTable from '../components/DataTable.vue'
+import DataTable from '../components/DataTable.vue';
 
 export default {
   name: "Home",
-    components: {
+  data: () => ({ drawer: null }),
+      components: {
     DataTable,
   },
-  data: () => ({ drawer: null }),
 };
 </script>
