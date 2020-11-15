@@ -127,7 +127,6 @@ export default {
   },
   data() {
     return {
-      teste: true,
       search: "",
       dialog: false,
       dialogDelete: false,
@@ -185,7 +184,6 @@ export default {
     },
 
     edit(item) {
-      console.log(item);
       this.editedIndex = 1;
       this.dataStudent = Object.assign({}, item);
       this.dialog = true;
