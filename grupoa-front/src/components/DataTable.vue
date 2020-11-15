@@ -43,6 +43,7 @@
                       v-model="dataStudent.academicRecord"
                       label="Registro Acâdemico"
                       type="number"
+                      v-bind:class="{ disabled: editedIndex ? true : false }"
                     />
                   </v-col>
 
@@ -55,7 +56,12 @@
                   </v-col>
 
                   <v-col cols="12">
-                    <v-text-field v-model="dataStudent.cpf" label="CPF" />
+                    <v-text-field
+                      v-model="dataStudent.cpf"
+                      label="CPF"
+                      v-mask="'###.###.###-##'"
+                      v-bind:class="{ disabled: editedIndex ? true : false }"
+                    />
                   </v-col>
                 </v-row>
               </v-container>
@@ -104,13 +110,15 @@
     </template>
 
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <span> Nenhum registro cadastrado! </span>
     </template>
   </v-data-table>
 </template>
 
 <script>
 import { studentApi } from "../service/students";
+import validateEmail from "../shared/utils/validateEmail";
+import "./DataTable.css";
 
 export default {
   name: "DataTable",
@@ -131,8 +139,10 @@ export default {
       ],
       users: [],
       editedIndex: 0,
+      idToDelete: 0,
       dataStudent: {
-        academicRecord: 0,
+        id: 0,
+        academicRecord: "",
         name: "",
         email: "",
         cpf: "",
@@ -174,32 +184,33 @@ export default {
     },
 
     edit(item) {
-      console.log(item);
       this.editedIndex = 1;
       this.dataStudent = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteDialog(student) {
-      this.dataStudent = {
-        academicRecord: student.academicRecord,
-        name: student.name,
-        email: student.email,
-        cpf: student.cpf,
-      };
+      this.idToDelete = student.id;
 
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      console.log("AQUI -> ", this.dataStudent);
+      this.deleteStudent(this.idToDelete);
+
       this.closeDelete();
     },
 
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.dataStudent = { academicRecord: "", name: "", email: "", cpf: "" };
+        this.dataStudent = {
+          id: 0,
+          academicRecord: "",
+          name: "",
+          email: "",
+          cpf: "",
+        };
         this.editedIndex = 0;
       });
     },
@@ -212,22 +223,103 @@ export default {
     },
 
     save() {
-      // if (this.editedIndex > 0) {
-      //   Object.assign(this.desserts[this.editedIndex], this.dataStudent);
-      // } else {
-      //   this.desserts.push(this.dataStudent);
-      // }
-      console.log(this.dataStudent);
-      this.close();
+      if (!this.dataStudent.academicRecord) {
+        alert("Informe o registro acadêmico.");
+        return;
+      }
+
+      if (!this.dataStudent.name) {
+        alert("Informe o nome.");
+        return;
+      }
+
+      if (!this.dataStudent.email) {
+        alert("Informe o email.");
+        return;
+      }
+
+      if (!this.dataStudent.cpf) {
+        alert("Informe o CPF.");
+        return;
+      }
+
+      if (!validateEmail(this.dataStudent.email)) {
+        alert("Informe um e-mail válido.");
+        return;
+      }
+
+      if (this.editedIndex > 0) {
+
+        console.log('STUDENT -> ', student);
+        const data = {
+          name: this.dataStudent.name,
+          email: this.dataStudent.email,
+        };
+
+        this.updateStudent(this.dataStudent.id, data)
+      } else {
+        const data = {
+          academicRecord: Number(this.dataStudent.academicRecord),
+          name: this.dataStudent.name,
+          email: this.dataStudent.email,
+          cpf: this.dataStudent.cpf,
+        };
+
+        this.createStudent(data);
+      }
     },
 
     getStudents() {
-      studentApi.findAll()
+      studentApi
+        .findAllStudents()
         .then((response) => {
           this.users = response.data.data;
         })
         .catch((err) => {
-          console.log("ERROR -> ", err.message);
+          alert(err.response.data.message);
+        });
+    },
+
+    deleteStudent(idStudent) {
+      studentApi
+        .deleteStudent(idStudent)
+        .then((response) => {
+          alert(response.data.data);
+
+          this.getStudents();
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+
+    createStudent(data) {
+      studentApi
+        .createStudent(data)
+        .then((response) => {
+          alert(response.data.data);
+
+          this.close();
+
+          this.getStudents();
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+
+    updateStudent(idStudent, data) {
+      studentApi
+        .updateStudent(idStudent, data)
+        .then((response) => {
+          alert(response.data.data);
+
+          this.close();
+
+          this.getStudents();
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
         });
     },
   },
