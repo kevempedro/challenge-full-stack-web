@@ -19,6 +19,11 @@ export async function findAllStudentController(request, response) {
     }
 }
 
+/*
+    Aqui é o exemplo de como se usaria a função findAll que espera os parâmetros, para fazer
+    paginação, ordenação e busca.
+*/
+
 // export async function findAllStudentController(request, response) {
 //     try {
 //         const { search, orderBy, direction, limit, offset } = request.query;
