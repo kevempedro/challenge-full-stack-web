@@ -7,22 +7,32 @@ import HTTP_STATUS from '../shared/utils/httStatus';
 import HTT_STATUS from '../shared/utils/httStatus';
 import { Op } from 'sequelize';
 
-export async function findAllStudentService(query) {
+export async function findAllStudentService() {
     try {
-        const students = await Student.findAll({
-            where: {
-                name: { [Op.like]: `%${query.search}%` }
-            },
-            order: [[`${query.orderBy}`, `${query.direction}`]],
-            limit: query.limit,
-            offset: query.offset,
-        });
+        const students = await Student.findAll();
 
         return new SuccessResponse({ data: students }, HTT_STATUS.OK);
     } catch (err) {
         throw new ErrorResponse(err.message, HTT_STATUS.INTERNAL_SERVER_ERROR);
     }
 }
+
+// export async function findAllStudentService(query) {
+//     try {
+//         const students = await Student.findAll({
+//             where: {
+//                 name: { [Op.like]: `%${query.search}%` }
+//             },
+//             order: [[`${query.orderBy}`, `${query.direction}`]],
+//             limit: query.limit,
+//             offset: query.offset,
+//         });
+
+//         return new SuccessResponse({ data: students }, HTT_STATUS.OK);
+//     } catch (err) {
+//         throw new ErrorResponse(err.message, HTT_STATUS.INTERNAL_SERVER_ERROR);
+//     }
+// }
 
 export async function createStudentService(body) {
     try {
