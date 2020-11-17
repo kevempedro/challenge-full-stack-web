@@ -6,7 +6,7 @@
       <v-list dense nav>
         <v-list-item @click="">
           <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
+            <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
