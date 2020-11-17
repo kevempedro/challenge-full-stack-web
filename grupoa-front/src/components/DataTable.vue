@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="users"
+    :items="students"
     class="elevation-1"
     :search="search"
     :custom-filter="filter"
@@ -137,7 +137,7 @@ export default {
         { text: "CPF", value: "cpf" },
         { text: "Acões", value: "actions", sortable: false },
       ],
-      users: [],
+      students: [],
       editedIndex: 0,
       idToDelete: 0,
       dataStudent: {
@@ -171,7 +171,7 @@ export default {
 
   methods: {
     initialize() {
-      this.users = [];
+      this.students = [];
     },
 
     filter(value, search, item, pagination) {
@@ -249,8 +249,6 @@ export default {
       }
 
       if (this.editedIndex > 0) {
-
-        console.log('STUDENT -> ', student);
         const data = {
           name: this.dataStudent.name,
           email: this.dataStudent.email,
@@ -273,7 +271,7 @@ export default {
       studentApi
         .findAllStudents()
         .then((response) => {
-          this.users = response.data.data;
+          this.students = response.data.data;
         })
         .catch((err) => {
           alert(err.response.data.message);
